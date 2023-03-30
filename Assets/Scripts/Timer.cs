@@ -29,7 +29,7 @@ public class Timer : MonoBehaviour
         // If the player taps the screen, log a message
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
-            Debug.Log("Screen Tapped");
+            
         }
     }
 
