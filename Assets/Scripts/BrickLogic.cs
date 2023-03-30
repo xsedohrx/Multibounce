@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,8 +20,27 @@ public class BrickLogic : MonoBehaviour
         if (brick.brickHealth <=0)
         {
             brick.brickHealth = 0;
-            Destroy(gameObject);
+            DestroyBrick();
         }
+    }
+
+    private void DestroyBrick()
+    {
+        ItemSpawnCheck();
+        Destroy(gameObject);
+    }
+
+    private void ItemSpawnCheck()
+    {
+        float random= UnityEngine.Random.Range(0, 100);
+        if (random / 100 > 0.8f)
+        {
+            Debug.Log("Spawned Item");
+        }
+        else {
+            Debug.Log("Nothing");
+        }
+        Debug.Log(random.ToString());
     }
 }
 

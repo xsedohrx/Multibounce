@@ -29,7 +29,7 @@ public class BallController : MonoBehaviour
     void Update()
     {
 
-        Debug.Log("Direction: " + direction);
+        
         // Wait for player input to start the game
         if (Input.touchCount > 0 && !hasGameStarted)
         {
@@ -58,7 +58,7 @@ public class BallController : MonoBehaviour
                     ResetBall();
                     return;
                 }
-                Debug.Log(hit.collider.gameObject);
+                //Debug.Log(hit.collider.gameObject);
                 direction = Vector2.Reflect(direction, hit.normal);
             }
 
