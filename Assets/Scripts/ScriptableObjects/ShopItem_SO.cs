@@ -10,6 +10,6 @@ public class ShopItem_SO : ScriptableObject
     public string description;
     public int baseCost;
     public int gemCost;
-    public Texture2D icon;
+    public Sprite icon;
 
 }

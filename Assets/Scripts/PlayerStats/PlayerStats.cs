@@ -6,27 +6,21 @@ using UnityEngine;
 public class PlayerStats : MonoBehaviour
 {
 
-    private void OnEnable()
-    {
-        ShopManager.onCoinAdded += SetPlayerStats;
-    }
-    private void OnDisable()
-    {
-        ShopManager.onCoinAdded -= SetPlayerStats;
-    }
-
+    private void OnEnable(){ ShopManager.onCoinAdded += SetPlayerResources; }
+    private void OnDisable(){ ShopManager.onCoinAdded -= SetPlayerResources; }
 
     //Save Player Data
-    public void SetPlayerStats(int coins, int gems, int diamonds) {
+    public void SetPlayerResources(int coins, int gems, int diamonds) {
 
-        PlayerPrefs.SetInt("Coins", GetPlayerCoins() + coins);
+        PlayerPrefs.SetInt("Coins", coins);
         PlayerPrefs.SetInt("Gems", gems);
         PlayerPrefs.SetInt("Diamonds", diamonds);
-        DebugStats();
+        //DebugStats();
 
     }
 
-    void DebugStats() {
+    //Log player resources
+    void DebugResources() {
         Debug.Log("Coins: " + PlayerPrefs.GetInt("Coins").ToString());
         Debug.Log("Gems: " + PlayerPrefs.GetInt("Gems").ToString());
         Debug.Log("Diamonds: " + PlayerPrefs.GetInt("Diamonds").ToString());

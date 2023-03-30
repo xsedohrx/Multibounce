@@ -30,6 +30,8 @@ public class ShopManager : MonoBehaviour
             shopPanels[i].titleTxt.text = shopItemsSO[i].title;
             shopPanels[i].descriptionText.text = shopItemsSO[i].description;
             shopPanels[i].costTxt.text = "Coins: " + shopItemsSO[i].baseCost.ToString();
+            shopPanels[i].image.sprite = shopItemsSO[i].icon;
+            shopPanels[i].image.preserveAspect = true;
             //TODO Set Images to shop items
         }
     }
@@ -38,12 +40,9 @@ public class ShopManager : MonoBehaviour
     {
         for (int i = 0; i < shopItemsSO.Length; i++)
         {
-            //TODO FIX
-            //coins >= shopItemsSO[i].baseCost
             if (playerStats.GetPlayerCoins() >= shopItemsSO[i].baseCost)
             {
                 myPurchaseButtons[i].interactable = true;
-
             }
             else
             {
@@ -52,15 +51,25 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+    //If the player has enough Coins purchase item and remove money from the player then update ui.
+    public void PurchaseItem(int btnNo) {
+        if (playerStats.GetPlayerCoins() >= shopItemsSO[btnNo].baseCost)
+        {
+            onCoinAdded?.Invoke(playerStats.GetPlayerCoins() - shopItemsSO[btnNo].baseCost, playerStats.GetPlayerGems(), playerStats.GetPlayerDiamonds());
+            CheckPurchaseable();
+            //TODO Unlock Item
+        }
+    }
+
 
     public static event Action<int, int, int> onCoinAdded;
     public void AddCoins()
     {
-        rewardAmount = 10;
-        onCoinAdded?.Invoke((playerStats.GetPlayerGems() + rewardAmount), playerStats.GetPlayerGems(), playerStats.GetPlayerDiamonds());
+        rewardAmount = 50;
+        onCoinAdded?.Invoke((playerStats.GetPlayerCoins() + rewardAmount), playerStats.GetPlayerGems(), playerStats.GetPlayerDiamonds());
+        CheckPurchaseable();
         ////TODO Play Ad
-        //coins++;
-        //UpdateUI();
+
 
     }
 }

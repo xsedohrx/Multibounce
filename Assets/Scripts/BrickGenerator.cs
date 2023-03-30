@@ -49,7 +49,7 @@ public class BrickGenerator : MonoBehaviourPunCallbacks
                 GameObject brickPrefab = brickPrefabs[UnityEngine.Random.Range(0, brickPrefabs.Length)];
 
                 // Spawn the brick and add it to the list of bricks
-                GameObject brick = PhotonNetwork.Instantiate(brickPrefab.name, position, Quaternion.identity);
+                GameObject brick = PhotonNetwork.Instantiate(brickPrefab.name, new Vector3(position.x,position.y,-1), Quaternion.identity);
                 bricks.Add(brick);
             }
         }
