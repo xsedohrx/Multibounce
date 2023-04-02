@@ -6,12 +6,12 @@ using UnityEngine;
 public class BallController : MonoBehaviour
 {
     Ball ball = new Ball();
-    
+
     public event Action OnTopBarrierHit, OnBottomBarrierHit;
 
     void Start(){ ResetBall(); }
 
-    void Update()
+    void FixedUpdate()
     {
         DrawRay();
         InputDetection();
@@ -19,20 +19,18 @@ public class BallController : MonoBehaviour
         if (ball.canMove)
         {
             MoveBall();
-            IncreaseSpeed();
+            ball.IncreaseSpeed();
             DetectCollision();
         }
+        else return;
+        
     }
 
     private bool InputDetection()
     {
         // Wait for player input to start the game
         if (Input.touchCount > 0 && !ball.canMove)
-        {
-            // Start the game
             ball.canMove = true;
-        }
-
         return ball.canMove;
     }
 
@@ -49,29 +47,28 @@ public class BallController : MonoBehaviour
         transform.Translate(ball.direction * ball.currentSpeed * Time.deltaTime);
     }
 
-    private void IncreaseSpeed()
+    public void DetectCollision()
     {
-        // Increase the speed over time
-        ball.currentSpeed += Time.deltaTime * 0.5f;
-    }
-
-    public void DetectCollision() {
         // Bounce the ball off of objects
         int layerMask = ~(1 << gameObject.layer); // ignore collisions with the ball's own layer
         float radius = GetComponent<CircleCollider2D>().radius;
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, ball.direction, radius, layerMask);
+        Vector2 center = (Vector2)transform.position + GetComponent<CircleCollider2D>().offset;
+        float distance = ball.currentSpeed * Time.deltaTime;
+        Vector2 endPoint = center + ball.direction.normalized * distance;
+
+        RaycastHit2D hit = Physics2D.CircleCast(center, radius, ball.direction, distance, layerMask);
 
         if (hit.collider != null)
         {
-
             if (hit.collider.tag == "BarrierTop" || hit.collider.tag == "BarrierBottom")
             {
                 BarrierCheck();
                 ResetBall();
                 return;
             }
-            //Debug.Log(hit.collider.gameObject);
+
             ball.SetDirection(hit);
+            return;
         }
     }
 
@@ -91,13 +88,10 @@ public class BallController : MonoBehaviour
 
     // Reset Ball properties
     public void ResetBall()
-    {
-        // Set the ball to the target position
+    {        
         transform.position = new Vector3(0f, 0f, -1f);
         ball.SetRandomDirection();
         ball.currentSpeed = ball.baseSpeed;
-
-        // Reset the ball's movement variables
         ball.canMove = false;
     }
 }
@@ -108,7 +102,7 @@ public class Ball {
     public float currentSpeed = 1f;
     public Vector2 direction;
     public bool canMove = false;
-
+    public float speedIncreaseStep = 0.5f;
     public void SetRandomDirection() {
         // Set a random direction for the ball to start moving in
         direction = new Vector2(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f)).normalized;
@@ -117,6 +111,12 @@ public class Ball {
     public void SetDirection(RaycastHit2D hit)
     {
         direction = Vector2.Reflect(direction, hit.normal);
+    }
+
+    public void IncreaseSpeed()
+    {
+        // Increase the speed over time
+        currentSpeed += Time.deltaTime * speedIncreaseStep;
     }
 
 }
